@@ -98,6 +98,13 @@ app.delete('/:id', function(req, res) {
 });
 
 
+// CREATE a user
+app.post('/users', function(req, res) {
+  res.json({
+    msg: 'HOORAY!'
+  });
+});
+
 
 app.listen(3030, function() {
 // console.log('DB: ' + process.env.DB_URI);
