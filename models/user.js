@@ -27,6 +27,13 @@ var userSchema = db.Schema({
    next();
  });
 
+ userSchema.methods.toJSON = function() {
+   var user = this.toObject();
+   delete user.passwordDigest;
+   delete user.__v;
+   return user;
+ }
+
 var User = db.model('User', userSchema);
 
 module.exports = User;
