@@ -2,8 +2,7 @@ require('dotenv').load();
 
 var express = require('express');
 var bodyParser = require('body-parser');
-
-
+var noteRoutes = require('./routes/note-routes');
 
 var app = express();
 
@@ -26,7 +25,7 @@ app.use(function(req, res, next){
 app.use(bodyParser.json());
 
 // Routes
-app.use('/api/v1/notes', require('./routes/note-routes'));
+app.use('/api/v1/notes', noteRoutes);
 
 // CREATE a user
 app.post('/users', function(req, res) {
