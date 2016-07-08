@@ -1,5 +1,6 @@
 var db = require('../config/db');
 
+
 var userSchema = db.Schema({
   name: {
     type: String,
@@ -10,11 +11,15 @@ var userSchema = db.Schema({
     required: true,
     unique: true
   },
+  passwordDigest: {
+    type: String,
+    required: true,
+
+  },
   updated_at: {
     type: Date,
     default: Date.now
   },
-
 });
 
  userSchema.pre('save', function(next) {
