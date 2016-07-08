@@ -4,10 +4,18 @@ var User = require('../models/user');
 
 // CREATE a user
 app.post('users', function(req, res) {
+  if (!passwordsPresent(req.body.user) || !passwordsMatch(req.body.user)) {
+    res.status(401).json({
+      message: 'Passwords must match',
+    });
+    return;
+  }
+
   var user = new User({
       name: req.body.user.name,
       username: req.body.user.username,
   });
+
   user
     .save()
     .then(
@@ -15,3 +23,11 @@ app.post('users', function(req, res) {
     );
 });
 module.exports = router;
+
+function passwordsPresent(payload){
+  return (payload.password && payload.passwordConfirmation)
+}
+
+function passwordsMatch(payload) {
+  return (payload.password === payload.passwordConfirmation)
+}
