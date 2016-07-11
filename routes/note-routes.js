@@ -17,6 +17,7 @@ router.get('/:id', function(req, res){
   });
 });
 
+
 // CREATE a note
 router.post('/', function(req, res) {
   var note = new Note({
@@ -34,43 +35,51 @@ router.post('/', function(req, res) {
     });
 });
 
-// Update a Note
+// UPDATE a note
 router.put('/:id', function(req, res) {
-  Note.findOne({
-    _id: req.params.id
-  }).then(function(note) {
-    note.title = req.body.note.title;
-    note.body_html = req.body.note.body_html;
-    note
-      .save()
-      .then(
-        function(){
-          res.json({
-            message: 'Your changes have been saved.',
-            note: note
-          });
-        },
+  Note
+    .findOne({
+      _id: req.params.id
+    })
+    .then(
+      function(note) {
+        note.title = req.body.note.title;
+        note.body_html = req.body.note.body_html;
+        note
+          .save()
+          .then(
+            function() {
+              res.json({
+                message: 'Your changes have been saved.',
+                note: note
+              });
+            },
+            function(result) {
+              res.json({ message: 'Aww, cuss!' });
+            }
+          );
+      },
       function(result) {
         res.json({ message: 'Aww, cuss!' });
       });
-  },
-  function(result) {
-    res.json({ message: 'Aww, cuss!' });
-  });
 });
 
-
+// DELETE a note
 router.delete('/:id', function(req, res) {
-  Note.findOne({
-    _id: req.params.id
-  }).then(function(note) {
-    note.remove().then(function() {
-      res.json({
-        message: 'That note has been deleted.',
-        note: note
-      })
+  Note
+    .findOne({
+      _id: req.params.id
+    })
+    .then(function(note) {
+      note
+        .remove()
+        .then(function() {
+          res.json({
+            message: 'That note has been deleted.',
+            note: note
+          })
+        });
     });
-  });
 });
 
 module.exports = router;

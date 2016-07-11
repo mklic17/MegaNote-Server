@@ -3,20 +3,19 @@ var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 var User = require('../models/user');
 
-
 // CREATE a user
-app.post('users', function(req, res) {
+router.post('/', function(req, res) {
   if (!passwordsPresent(req.body.user) || !passwordsMatch(req.body.user)) {
-    res.status(401).json({
-      message: 'Passwords must match',
+    res.status(422).json({
+      message: 'Passwords must match!'
     });
     return;
   }
 
   var user = new User({
-      name: req.body.user.name,
-      username: req.body.user.username,
-      passwordDigest: bcrypt.hashSync(req.body.user.password, 10);
+    name: req.body.user.name,
+    username: req.body.user.username,
+    passwordDigest: bcrypt.hashSync(req.body.user.password, 10)
   });
 
   user
@@ -29,13 +28,42 @@ app.post('users', function(req, res) {
         res.json({
           user: userData,
           authToken: token
-        )};
+        });
       }
     );
 });
+
+//UpDATE user
+router.put('/:id', (req, res) => {
+  User
+    .findOne({
+      _id: req.params.id
+    })
+    .then(
+      if (user) {
+        //user exists
+        user => {
+          user.name = req.body.user.name;
+          user.username = req.body.username;
+          user.save()
+            .then(
+              // success
+              () => res.json({user}), // user: user is the sam
+              // failure
+              () => res.status(422).json({message: 'Unable to update user.'});
+            );
+          }
+      }
+      else {
+        // user does not exist
+        res.status(404).json({message: 'Could not find the user'});
+      }
+    )
+});
+
 module.exports = router;
 
-function passwordsPresent(payload){
+function passwordsPresent(payload) {
   return (payload.password && payload.passwordConfirmation)
 }
 

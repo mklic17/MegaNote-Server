@@ -14,7 +14,6 @@ var userSchema = db.Schema({
   passwordDigest: {
     type: String,
     required: true,
-
   },
   updated_at: {
     type: Date,
