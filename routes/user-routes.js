@@ -33,7 +33,7 @@ router.post('/', function(req, res) {
     );
 });
 
-//UpDATE user
+//UPDATE user
 router.put('/:id', (req, res) => {
   User
     .findOne({
@@ -42,9 +42,8 @@ router.put('/:id', (req, res) => {
     .then(
       if (user) {
         //user exists
-        user => {
           user.name = req.body.user.name;
-          user.username = req.body.username;
+          user.username = req.body.user.username;
           user.save()
             .then(
               // success
@@ -52,7 +51,7 @@ router.put('/:id', (req, res) => {
               // failure
               () => res.status(422).json({message: 'Unable to update user.'});
             );
-          }
+
       }
       else {
         // user does not exist
