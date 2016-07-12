@@ -40,7 +40,8 @@ router.put('/:id', (req, res) => {
       _id: req.params.id
     })
     .then(
-      if (user) {
+      user => {
+      if(user) {
         //user exists
           user.name = req.body.user.name;
           user.username = req.body.user.username;
@@ -49,7 +50,7 @@ router.put('/:id', (req, res) => {
               // success
               () => res.json({user}), // user: user is the sam
               // failure
-              () => res.status(422).json({message: 'Unable to update user.'});
+              () => res.status(422).json({ message: 'Unable to update user.' })
             );
 
       }
@@ -57,7 +58,8 @@ router.put('/:id', (req, res) => {
         // user does not exist
         res.status(404).json({message: 'Could not find the user'});
       }
-    )
+    }
+  );
 });
 
 module.exports = router;
