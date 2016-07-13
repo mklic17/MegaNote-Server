@@ -1,16 +1,17 @@
 var bcrypt = require('bcryptjs');
 var db = require('../config/db');
 var noteSchema = require('./note-schema');
+let beautifyUnique = require('mongoose-beautiful-unique-validation');
 
 var userSchema = db.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: 'Two users cannot share the same username'
   },
   passwordDigest: {
     type: String,
@@ -22,6 +23,8 @@ var userSchema = db.Schema({
   },
   notes: [noteSchema],
 });
+
+userSchema.plugin(beautifyUnique);
 
  userSchema.pre('save', function(next) {
    this.update_at = Date.now();

@@ -5,7 +5,7 @@ var User = require('../models/user');
 
 // CREATE a user
 router.post('/', function(req, res) {
-  if (!passwordsPresent(req.body.user) || !passwordsMatch(req.body.user)) {
+  if (passwordsPresent(req.body.user) && !passwordsMatch(req.body.user)) {
     res.status(422).json({
       message: 'Passwords must match!'
     });
@@ -26,15 +26,15 @@ router.post('/', function(req, res) {
           { _id: userData._id },
           process.env.JWT_SECRET,
           {
-          expiresIn: 60*60*24
-        }
-      );
+            expiresIn: 60*60*24
+          }
+        );
         res.json({
           user: userData,
           authToken: token
         });
-      }
-    );
+    }
+  );
 });
 
 //UPDATE user
@@ -49,10 +49,11 @@ router.put('/:id', (req, res) => {
         //user exists
           user.name = req.body.user.name;
           user.username = req.body.user.username;
-          user.save()
+          user
+            .save()
             .then(
               // success
-              () => res.json({user}), // user: user is the sam
+              () => res.json({ user }),
               // failure
               () => res.status(422).json({ message: 'Unable to update user.' })
             );
@@ -60,7 +61,7 @@ router.put('/:id', (req, res) => {
       }
       else {
         // user does not exist
-        res.status(404).json({message: 'Could not find the user'});
+        res.status(404).json({ message: 'Could not find the user' });
       }
     }
   );
