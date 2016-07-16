@@ -32,7 +32,12 @@ router.post('/', function(req, res) {
         res.json({
           user: userData,
           authToken: token
-        });
+        })
+      // err => {
+      //   res.status(422).json({
+      //     message: 'this went wrong ' + err
+      //   });
+      // }
     }
   );
 });

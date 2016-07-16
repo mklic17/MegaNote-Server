@@ -1,7 +1,7 @@
 var bcrypt = require('bcryptjs');
+var beautifyUnique = require('mongoose-beautiful-unique-validation');
 var db = require('../config/db');
 var noteSchema = require('./note-schema');
-let beautifyUnique = require('mongoose-beautiful-unique-validation');
 
 var userSchema = db.Schema({
   name: {
@@ -11,11 +11,11 @@ var userSchema = db.Schema({
   username: {
     type: String,
     required: true,
-    unique: 'Two users cannot share the same username'
+    unique: true
   },
   passwordDigest: {
     type: String,
-    required: true,
+    required: true //'the password field is blank',
   },
   updated_at: {
     type: Date,
@@ -24,9 +24,10 @@ var userSchema = db.Schema({
   notes: [noteSchema],
 });
 
+// enables beautifying
 userSchema.plugin(beautifyUnique);
 
- userSchema.pre('save', function(next) {
+userSchema.pre('save', function(next) {
    this.update_at = Date.now();
    next();
  });
@@ -38,9 +39,17 @@ userSchema.plugin(beautifyUnique);
    return user;
  };
 
- userSchema.methods.authenticate = function(password, callback) {
-   bcrypt.compare(password, this.passwordDigest, (err, isMatch) => {
-       callback(isMatch);
+ userSchema.methods.authenticate = function(password) {
+   const user = this;
+   return new Promise((resolve, reject) => {
+     bcrypt.compare(password, this.passwordDigest, (err, isMatch) => {
+         if (isMatch) {
+           resolve(user);
+         }
+         else {
+           reject(err);
+         }
+     });
    });
  };
 
