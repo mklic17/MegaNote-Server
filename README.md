@@ -2,6 +2,8 @@
 
 Meganote Server is a REST API for note-taking.
 
+Based on the curriculum for [Xtern Bootcamp 2016](http://bootcamp16.getfretless.com/).
+
 ## Setup
 
 Copy and edit DOTENV configuration
